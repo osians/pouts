@@ -15,7 +15,7 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
 
     public function testImplementsPsr4ExceptionInstance()
     {
-        $this->exception = new VTException();
+        $this->exception = new VTException("Erro Encontrado", 1);
         $this->exception->register();
         $this->assertInstanceOf('\Exception', $this->exception);
     }

@@ -13,13 +13,13 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'ErrorHandler.php';
  */
 class VTException extends \Exception
 {
-    public function __construct($message = null,  $code = 0, $arquivo = null, $linha = null)
+    public function __construct($message = null, $code = 0, $arquivo = null, $linha = null)
     {
         parent::__construct($message, $code);
-        $this->initConfig();
+        $this->initConfig($message, $code, $arquivo, $linha);
     }
 
-    public function initConfig()
+    public function initConfig($message, $code, $arquivo, $linha)
     {
         global $eConfig;
 
@@ -83,7 +83,7 @@ class VTException extends \Exception
     public function register()
     {
         register_shutdown_function(array($this, 'checkForFatalError'));
-        set_error_handler(array('\VTException\ErrorHandler', 'handler'));
+        set_error_handler(array('\Osians\VTException\ErrorHandler', 'handler'));
         // set_exception_handler( "log_exception" );
         // ini_set("display_errors", "off");
         error_reporting(E_ALL);
