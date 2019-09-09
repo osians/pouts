@@ -1,8 +1,8 @@
 <?php
 
-namespace VTException;
+namespace Osians\VTException;
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Config.php';
+// require_once __DIR__ . DIRECTORY_SEPARATOR . 'Config.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'ErrorOutput.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'ErrorHandler.php';
 
@@ -13,15 +13,15 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'ErrorHandler.php';
  */
 class VTException extends \Exception
 {
-    public function __construct(
-        $message = null, 
-        $code = 0, 
-        $arquivo = null, 
-        $linha = null
-    ) {
-        global $eConfig;
-
+    public function __construct($message = null,  $code = 0, $arquivo = null, $linha = null)
+    {
         parent::__construct($message, $code);
+        $this->initConfig();
+    }
+
+    public function initConfig()
+    {
+        global $eConfig;
 
         date_default_timezone_set($eConfig['default_time_zone']);
         $hoje = date($eConfig['date_format']);

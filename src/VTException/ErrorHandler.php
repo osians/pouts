@@ -1,6 +1,6 @@
 <?php
 
-namespace VTException;
+namespace Osians\VTException;
 
 /**
  *    Classe responsavel por lidar e apresentar informacoes

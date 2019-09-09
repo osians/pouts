@@ -1,8 +1,8 @@
 <?php
 
-namespace VTException;
+namespace Osians\VTException;
 
-header('Content-Type: text/html; charset=utf-8');
+// header('Content-Type: text/html; charset=utf-8');
 
 /**
  *    Classe responsavel por apresentar uma Pagina
