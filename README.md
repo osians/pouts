@@ -1,2 +1,2 @@
-# vtexception
-Controla Erros e exceptions no sistema
+# Pouts
+Controla Erros e exceptions em sistemas PHP
