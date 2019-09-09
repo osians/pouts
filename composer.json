@@ -1,0 +1,23 @@
+{
+    "name" : "osians/vtexception",
+    "version": "1.0.0",
+    "description": "Serviço de Controle e alerta de Erros",
+    "keywords": ["Exception", "Error", "PHP", "Vita"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wanderlei Santana do Nascimento",
+            "email": "sans.pds@gmail.com",
+            "role": "Creator / Main Developer",
+            "homepage": "http://sooho.com.br"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "vtexception\\": "src/"
+        }
+    }
+}
