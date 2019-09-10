@@ -22,7 +22,7 @@ class ErrorHandler
             case E_NOTICE:
             case E_WARNING:
             case E_ERROR:
-                new \Exception($errstr, $errno);
+                throw new \Exception($errstr, $errno);
                 exit(1);
                 break;
 

@@ -9,7 +9,7 @@ class ShutdownHandler
         $error = error_get_last();
 
         if ($error["type"] == E_ERROR) {
-            ErrorHandler::handler(
+            \Osians\Pouts\ErrorHandler::handler(
                 $error["type"],
                 $error["message"],
                 $error["file"],

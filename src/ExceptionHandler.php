@@ -15,7 +15,8 @@ class ExceptionHandler
 
     public static function handler($exception)
     {
-        var_dump($exception);
+        echo PHP_EOL . "@todo: ExceptionHandler::handler - Implementar aqui tratamento de Exception" . PHP_EOL;
+        // var_dump($exception);
         error_reporting(0);
     }
 
