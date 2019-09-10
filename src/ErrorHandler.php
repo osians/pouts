@@ -1,6 +1,6 @@
 <?php
 
-namespace Osians\VTException;
+namespace Osians\Pouts;
 
 /**
  *    Classe responsavel por lidar e apresentar informacoes
@@ -22,7 +22,7 @@ class ErrorHandler
             case E_NOTICE:
             case E_WARNING:
             case E_ERROR:
-                new VitaException($errstr, $errno, $errfile, $errline);
+                new \Exception($errstr, $errno);
                 exit(1);
                 break;
 

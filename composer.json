@@ -1,5 +1,5 @@
 {
-    "name" : "osians/vtexception",
+    "name" : "osians/pouts",
     "version": "1.0.0",
     "description": "Serviço de Controle e alerta de Erros",
     "keywords": ["Exception", "Error", "PHP", "Vita"],
@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Osians\\VTException\\": "src/VTException/"
+            "Osians\\Pouts\\": "src/"
         }
     },
     "scripts": {

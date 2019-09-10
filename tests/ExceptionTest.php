@@ -2,22 +2,22 @@
 
 // require_once __DIR__ . '/../src/VTException/VTException.php';
 
-use \Osians\VTException\VTException;
+use \Osians\Pouts\Pouts;
 
 class ExceptionTest extends \PHPUnit\Framework\TestCase
 {
-    private $exception;
+    private $pouts;
 
     public function setUp()
     {
-        //$this->exception = new VTException();
+        //$this->pouts = new VTException();
     }
 
     public function testImplementsPsr4ExceptionInstance()
     {
-        $this->exception = new VTException("Erro Encontrado", 1);
-        $this->exception->register();
-        $this->assertInstanceOf('\Exception', $this->exception);
+        $this->pouts = new Pouts();
+        $this->pouts->register();
+        $this->assertInstanceOf('\Osians\Pouts\Pouts', $this->pouts);
     }
 
     public function tearDown() {

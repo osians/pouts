@@ -1,28 +1,28 @@
 <?php
 
-namespace Osians\VTException;
-
-// require_once __DIR__ . DIRECTORY_SEPARATOR . 'Config.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'ErrorOutput.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'ErrorHandler.php';
+namespace Osians\Pouts;
 
 /**
  *    Classe responsavel por tratar Exceptions no sistema
  *    normalmente as chamada atraves do codigo
  *    thown new SysException( "Mensagem a ser apresentada" );
  */
-class VTException extends \Exception
+class ExceptionHandler
 {
-    public function __construct($message = null, $code = 0, $arquivo = null, $linha = null)
+    public function __construct()
     {
-        parent::__construct($message, $code);
-        $this->initConfig($message, $code, $arquivo, $linha);
+    }
+
+    public static function handler($exception)
+    {
+        var_dump($exception);
+        error_reporting(0);
     }
 
     public function initConfig($message, $code, $arquivo, $linha)
     {
         global $eConfig;
-
+var_dump($message);
         date_default_timezone_set($eConfig['default_time_zone']);
         $hoje = date($eConfig['date_format']);
 
