@@ -15,28 +15,41 @@ class ErrorOutput
         $this->$name = htmlspecialchars($value);
     }
 
-    public function getContent()
+    public function gatherInformation()
     {
         global $eConfig;
+
+        $info = new \StdClass;
+        $info->dataFormatada = date('yyyy-mm-dd hh:ii:ss', $_SERVER['REQUEST_TIME']);
+        $info->trace = str_replace("#", "<br>#", $this->traceAsString);
+        $info->arquivo = basename($this->file);
+        $info->requestedUri = isset($_SERVER['HTTP_HOST'])
+            ? "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}" : 'undefined';
+
+        $info->server = new \StdClass;
+        $info->server->httpAccept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : 'Undefined';
+        $info->server->httpUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Undefined';
+        $info->server->remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Undefined';
+        $info->server->serverAdmin = isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : 'Undefined';
+
+        return $info;
+    }
+
+    public function getContent()
+    {
+        $info = $this->gatherInformation();
+
+        global $eConfig;
+
 
         if (ob_get_contents()) {
             ob_end_clean();
         }
 
         // date_default_timezone_set($eConfig['default_time_zone']);
-        $data_formatada = date('yyyy-mm-dd hh:ii:ss', $_SERVER['REQUEST_TIME']);
-        $trace = str_replace("#", "<br>#", $this->traceAsString);
-        $arquivo = basename($this->file);
-        $fullRequestUri = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+
 
         $this->trechoComErro = "";
-
-        // $dbp = (isset(Vita::getInstance()->config->dbpass)) ? Vita::getInstance()->config->dbpass : false;
-        // $dbu = (isset(Vita::getInstance()->config->dbuser)) ? Vita::getInstance()->config->dbuser : false;
-        // if( $dbp ) {
-        //     $this->message = str_replace( $dbp, '*************', $this->message );
-        //     $this->message = str_replace( $dbu, '*************', $this->message );
-        // }
 
         // obtendo codigo do arquivo que deu erro
         $handle = fopen($this->file, "r");
@@ -139,7 +152,7 @@ class ErrorOutput
             <body>
             <div class="container">
                 <br>
-                <h1>Erro em: {$arquivo}</h1>
+                <h1>Erro em: {$info->arquivo}</h1>
 
                 <div class="errwrapper">
                     <div style="">
@@ -158,17 +171,17 @@ class ErrorOutput
                             <b>Mensagem:</b>   {$this->message} <br>
                             <b>Arquivo</b>:    {$this->file} (Linha: {$this->line}) <br>
                             <b>Código</b>:     {$this->code} <br>
-                            <b>Trace(str):</b> {$trace} <br>
+                            <b>Trace(str):</b> {$info->trace} <br>
                             <br><br>
 
                             <span class='show_extra_log'>
                             <b>Dados adicionais</b> <br>
-                            REQUEST_URI: {$fullRequestUri}<br>
-                            HTTP_ACCEPT:  {$_SERVER['HTTP_ACCEPT']} <br>
-                            USER_AGENT :  {$_SERVER['HTTP_USER_AGENT']} <br>
-                            REMOTE_ADDR:  {$_SERVER['REMOTE_ADDR']} <br>
-                            REQUEST_TIME: {$data_formatada}<br>
-                            SERVER_ADMIN: {$_SERVER['SERVER_ADMIN']}<br>
+                            REQUEST_URI:  {$info->requestedUri}<br>
+                            HTTP_ACCEPT:  {$info->server->httpAccept} <br>
+                            USER_AGENT :  {$info->server->httpUserAgent} <br>
+                            REMOTE_ADDR:  {$info->server->remoteAddr} <br>
+                            REQUEST_TIME: {$info->dataFormatada}<br>
+                            SERVER_ADMIN: {$info->server->serverAdmin}<br>
                             </span>
                         </div>
                         <a href="mailto:{$eConfig['sys_error_log_email']}">Informar o erro ao desenvolvedor</a>
@@ -199,7 +212,7 @@ HTML;
                         <h1>Erro {$code}</h1>
                     </div>
                     <div class="errwrapper">
-                        Arquivo: {$arquivo} <br>
+                        Arquivo: {$info->arquivo} <br>
                         Linha: {$this->line}
                     </div>
                 </body>
