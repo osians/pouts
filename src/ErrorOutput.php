@@ -1,6 +1,6 @@
 <?php
 
-namespace Osians\VTException;
+namespace Osians\Pouts;
 
 // header('Content-Type: text/html; charset=utf-8');
 
@@ -15,7 +15,7 @@ class ErrorOutput
         $this->$name = htmlspecialchars($value);
     }
 
-    public function __toString()
+    public function getContent()
     {
         global $eConfig;
 
@@ -23,20 +23,20 @@ class ErrorOutput
             ob_end_clean();
         }
 
-        date_default_timezone_set($eConfig['default_time_zone']);
-        $data_formatada = date($eConfig['date_format'], $_SERVER['REQUEST_TIME']);
+        // date_default_timezone_set($eConfig['default_time_zone']);
+        $data_formatada = date('yyyy-mm-dd hh:ii:ss', $_SERVER['REQUEST_TIME']);
         $trace = str_replace("#", "<br>#", $this->traceAsString);
         $arquivo = basename($this->file);
         $fullRequestUri = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 
         $this->trechoComErro = "";
 
-        $dbp = (isset(Vita::getInstance()->config->dbpass)) ? Vita::getInstance()->config->dbpass : false;
-        $dbu = (isset(Vita::getInstance()->config->dbuser)) ? Vita::getInstance()->config->dbuser : false;
-        if( $dbp ) {
-            $this->message = str_replace( $dbp, '*************', $this->message );
-            $this->message = str_replace( $dbu, '*************', $this->message );
-        }
+        // $dbp = (isset(Vita::getInstance()->config->dbpass)) ? Vita::getInstance()->config->dbpass : false;
+        // $dbu = (isset(Vita::getInstance()->config->dbuser)) ? Vita::getInstance()->config->dbuser : false;
+        // if( $dbp ) {
+        //     $this->message = str_replace( $dbp, '*************', $this->message );
+        //     $this->message = str_replace( $dbu, '*************', $this->message );
+        // }
 
         // obtendo codigo do arquivo que deu erro
         $handle = fopen($this->file, "r");
@@ -73,7 +73,7 @@ class ErrorOutput
         $show_extra_log = ($eConfig['show_extra_log'] == FALSE) ? "display:none;" : "";
 
         // verificando se deve apresentar uma versao mais light de erros
-        if($this->show_error_log)
+        if($this->showFullErrorLog)
         {
 
         $html =<<<HTML
@@ -208,5 +208,10 @@ HTML;
         }
 
         return $html;
+    }
+
+    public function __toString()
+    {
+        return $this->getContent();
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Osians\Pouts;
 
+use \Exception;
+
 /**
  *    Classe responsavel por tratar Exceptions no sistema
  *    normalmente as chamada atraves do codigo
@@ -15,30 +17,23 @@ class ExceptionHandler
 
     public static function handler($exception)
     {
-        echo PHP_EOL . "@todo: ExceptionHandler::handler - Implementar aqui tratamento de Exception" . PHP_EOL;
-        // var_dump($exception);
+        self::initConfig($exception);
         error_reporting(0);
     }
 
-    public function initConfig($message, $code, $arquivo, $linha)
+    public static function initConfig(Exception $exception)
     {
         global $eConfig;
-var_dump($message);
-        date_default_timezone_set($eConfig['default_time_zone']);
-        $hoje = date($eConfig['date_format']);
 
-        $this->file = $arquivo == null ? $this->getFile() : $arquivo;
-        $this->line = $linha == null ? $this->getLine() : $linha;
-        $this->message = $this->getMessage();
-        $this->code = $this->getCode() . " - ".$this->getTypeError($code);
-        $this->traceAsString = $this->getTraceAsString();
+        $hoje = date('yyyy-mm-dd HH:ii:ss');
+        $code = $exception->getCode() . " - ". self::getTypeError($exception->getCode());
 
         $msgError = "\n ====== $hoje ======"
-                  . "\n Erro no arquivo : " . $this->file
-                  . "\n Linha :           " . $this->line
-                  . "\n Mensagem :        " . $this->message
-                  . "\n Codigo :          " . $this->code
-                  . "\n Trace(str) :      " . "\n" . $this->traceAsString
+                  . "\n Erro no arquivo : " . $exception->getFile()
+                  . "\n Linha :           " . $exception->getLine()
+                  . "\n Mensagem :        " . $exception->getMessage()
+                  . "\n Codigo :          " . $code
+                  . "\n Trace(str) :      " . "\n" . $exception->getTraceAsString()
                   . "\n ";
 
         $tmpFileDestionation = $eConfig['log_folder']
@@ -70,61 +65,36 @@ var_dump($message);
         # apresentando pagina com saida HTML
         $error = new ErrorOutput();
         $error->show_error_log = $eConfig['show_error_log'];
-        $error->message = $this->message;
-        $error->line = $this->line;
-        $error->file = $this->file;
-        $error->code = $this->code;
-        $error->traceAsString = $this->traceAsString;
+        $error->message = $exception->getMessage();
+        $error->line = $exception->getLine();
+        $error->file = $exception->getFile();
+        $error->code = $exception->getCode();
+        $error->traceAsString = $exception->getTraceAsString();
+        $error->showFullErrorLog = true;
         print $error;
 
         # ja exibimos erro, nao necessario que php faca isso novamente, desligando erros do sistema
         error_reporting(0);
     }
 
-    public function register()
+    public static function getTypeError($errorCode)
     {
-        register_shutdown_function(array($this, 'checkForFatalError'));
-        set_error_handler(array('\Osians\VTException\ErrorHandler', 'handler'));
-        // set_exception_handler( "log_exception" );
-        // ini_set("display_errors", "off");
-        error_reporting(E_ALL);
-    }
-
-    /**
-     *    Lida com erros fatais
-     */
-    public function checkForFatalError()
-    {
-        $error = error_get_last();
-        if ($error["type"] == E_ERROR) {
-            ErrorHandler::handler(
-                $error["type"],
-                $error["message"],
-                $error["file"],
-                $error["line"]
-            );
-        }
-    }
-
-    public function getTypeError($errorCode)
-    {
-        switch ($errorCode)
-        {
-            case E_ERROR: return "E_ERROR"; break; // code: 1
-            case E_WARNING: return "E_WARNING"; break; // code: 2
-            case E_PARSE: return "E_PARSE"; break; // code: 4
-            case E_NOTICE: return "E_NOTICE"; break; // code: 8
-            case E_CORE_ERROR: return "E_CORE_ERROR"; break; // 1code: 6
-            case E_CORE_WARNING: return "E_CORE_WARNING"; break; // 3code: 2
-            case E_COMPILE_ERROR: return "E_COMPILE_ERROR"; break; // 6code: 4
-            case E_COMPILE_WARNING: return "E_COMPILE_WARNING"; break; // 12code: 8
-            case E_USER_ERROR: return "E_USER_ERROR"; break; // 25code: 6
-            case E_USER_WARNING: return "E_USER_WARNING"; break; // 51code: 2
-            case E_USER_NOTICE: return "E_USER_NOTICE"; break; // 102code: 4
-            case E_ALL: return "E_ALL"; break; // 614code: 3
-            case E_STRICT: return "E_STRICT"; break; // 204code: 8
+        switch ($errorCode) {
+            case E_ERROR:             return "E_ERROR"; break; // code: 1
+            case E_WARNING:           return "E_WARNING"; break; // code: 2
+            case E_PARSE:             return "E_PARSE"; break; // code: 4
+            case E_NOTICE:            return "E_NOTICE"; break; // code: 8
+            case E_CORE_ERROR:        return "E_CORE_ERROR"; break; // 1code: 6
+            case E_CORE_WARNING:      return "E_CORE_WARNING"; break; // 3code: 2
+            case E_COMPILE_ERROR:     return "E_COMPILE_ERROR"; break; // 6code: 4
+            case E_COMPILE_WARNING:   return "E_COMPILE_WARNING"; break; // 12code: 8
+            case E_USER_ERROR:        return "E_USER_ERROR"; break; // 25code: 6
+            case E_USER_WARNING:      return "E_USER_WARNING"; break; // 51code: 2
+            case E_USER_NOTICE:       return "E_USER_NOTICE"; break; // 102code: 4
+            case E_ALL:               return "E_ALL"; break; // 614code: 3
+            case E_STRICT:            return "E_STRICT"; break; // 204code: 8
             case E_RECOVERABLE_ERROR: return "E_RECOVERABLE_ERROR"; break; // 409code: 6
-            default: return "UNDEFINED"; break;
+            default:                  return "UNDEFINED"; break;
         }
     }
 }

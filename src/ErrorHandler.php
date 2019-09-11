@@ -5,13 +5,15 @@ namespace Osians\Pouts;
 /**
  *    Classe responsavel por lidar e apresentar informacoes
  *    acerca de erros que venham a acontecer no sistema
- * 
+ *
  *    @source https://www.php.net/manual/pt_BR/function.set-error-handler.php
  */
 class ErrorHandler
 {
     public static function handler($errno, $errstr, $errfile, $errline, $errcontext)
     {
+        $avoidExecuteInternalHandler = true;
+
         //    Verifica se Codigo de erro esta incluido em error_reporting
         if (!(error_reporting() & $errno)) {
             return;
@@ -30,10 +32,11 @@ class ErrorHandler
 
             default:
                 echo "Erro desconhecido: [{$errno}] {$errstr} " . PHP_EOL;
+                $avoidExecuteInternalHandler = false;
                 break;
         }
 
         /* evita executar o handler interno de erros do PHP */
-        return true;
+        return $avoidExecuteInternalHandler;
     }
 }
